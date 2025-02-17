@@ -1,4 +1,4 @@
-package dev.albertocaro.backend.infrastructure.auth.model
+package dev.albertocaro.backend.infrastructure.auth.dto
 
 data class LoginDto(
     val username: String,

@@ -1,7 +1,7 @@
 package dev.albertocaro.backend.infrastructure.auth
 
 import dev.albertocaro.backend.domain.usecases.auth.Login
-import dev.albertocaro.backend.infrastructure.auth.model.LoginDto
+import dev.albertocaro.backend.infrastructure.auth.dto.LoginDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
