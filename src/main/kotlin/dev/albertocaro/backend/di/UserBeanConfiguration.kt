@@ -13,6 +13,9 @@ class UserBeanConfiguration {
     fun getUserById(repository: UserRepository) = GetUserById(repository)
 
     @Bean
+    fun getUserByUsername(repository: UserRepository) = GetUserByUsername(repository)
+
+    @Bean
     fun getUsers(repository: UserRepository) = GetUsers(repository)
 
     @Bean
