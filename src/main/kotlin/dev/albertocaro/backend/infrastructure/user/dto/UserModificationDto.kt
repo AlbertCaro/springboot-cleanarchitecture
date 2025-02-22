@@ -1,13 +1,34 @@
 package dev.albertocaro.backend.infrastructure.user.dto
 
-data class UserModificationDto (
-    val username: String,
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Size
 
-    val password: String,
+data class UserModificationDto(
+    @field:NotNull
+    @field:NotBlank
+    @field:Size(max = 255)
+    val username: String?,
 
-    val email: String,
+    @field:NotNull
+    @field:NotBlank
+    @field:Size(min = 6, max = 255)
+    val password: String?,
 
-    val name: String,
+    @field:Email
+    @field:NotNull
+    @field:NotBlank
+    @field:Size(max = 255)
+    val email: String?,
 
-    val lastName: String,
+    @field:NotNull
+    @field:NotBlank
+    @field:Size(max = 255)
+    val name: String?,
+
+    @field:NotNull
+    @field:NotBlank
+    @field:Size(max = 255)
+    val lastName: String?,
 )

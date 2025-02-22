@@ -5,6 +5,7 @@ import dev.albertocaro.backend.domain.usecases.user.*
 import dev.albertocaro.backend.infrastructure.user.dto.UserGetDto
 import dev.albertocaro.backend.infrastructure.user.dto.UserModificationDto
 import dev.albertocaro.backend.infrastructure.user.dto.toGet
+import jakarta.validation.ConstraintViolationException
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

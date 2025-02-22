@@ -20,4 +20,4 @@ data class User(
 
 fun UserEntity.toDomain() = User(id, username, password, email, name, lastName)
 
-fun UserModificationDto.toDomain() = User(null, username, password, email, name, lastName)
+fun UserModificationDto.toDomain() = User(null, username!!, password!!, email!!, name!!, lastName!!)
