@@ -40,21 +40,21 @@ class UserController(
 
     @GetMapping("/{id}")
     fun getUser(@PathVariable id: Long): ResponseEntity<UserGetDto> {
-        val user = getUserById.execute(id)
+        val user = getUserById(id)
 
         return user.map { ResponseEntity.ok(it.toGet()) }.orElseGet { ResponseEntity.notFound().build() }
     }
 
     @GetMapping
     fun getAllUsers(): ResponseEntity<List<UserGetDto>> {
-        val users = getUsers.execute().map { it.toGet() }
+        val users = getUsers().map { it.toGet() }
 
         return ResponseEntity.ok(users)
     }
 
     @PostMapping
     fun createUser(@Valid @RequestBody user: UserModificationDto): ResponseEntity<Optional<UserGetDto>> {
-        val createdUser = createUser.execute(user.toDomain()).map { it.toGet() }
+        val createdUser = createUser(user.toDomain()).map { it.toGet() }
 
         return ResponseEntity.ok(createdUser)
     }
@@ -63,16 +63,16 @@ class UserController(
     fun updateUser(
         @PathVariable id: Long, @Valid @RequestBody user: UserModificationDto
     ): ResponseEntity<Optional<UserGetDto>> {
-        val editedUser = editUser.execute(id, user.toDomain()).map { it.toGet() }
+        val editedUser = editUser(id, user.toDomain()).map { it.toGet() }
 
         return ResponseEntity.ok(editedUser)
     }
 
     @DeleteMapping("/{id}")
     fun removeUser(@PathVariable id: Long): ResponseEntity<Void> {
-        val user = getUserById.execute(id).getOrNull() ?: return ResponseEntity.notFound().build()
+        val user = getUserById(id).getOrNull() ?: return ResponseEntity.notFound().build()
 
-        deleteUser.execute(user)
+        deleteUser(user)
         return ResponseEntity.noContent().build()
     }
 }

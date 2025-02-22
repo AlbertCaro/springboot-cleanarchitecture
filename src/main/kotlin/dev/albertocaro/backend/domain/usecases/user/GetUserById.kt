@@ -8,7 +8,7 @@ class GetUserById(
     private var repository: UserRepository
 ) {
 
-    fun execute(id: Long): Optional<User> {
+    operator fun invoke(id: Long): Optional<User> {
         return repository.findById(id)
     }
 }

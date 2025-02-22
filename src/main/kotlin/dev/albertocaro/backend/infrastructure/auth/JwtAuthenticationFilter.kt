@@ -1,6 +1,5 @@
 package dev.albertocaro.backend.infrastructure.auth
 
-import dev.albertocaro.backend.core.AuthService
 import dev.albertocaro.backend.core.AuthService.Companion.SECRET_KEY
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts

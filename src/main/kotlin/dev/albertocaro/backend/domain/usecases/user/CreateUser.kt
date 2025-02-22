@@ -10,7 +10,7 @@ class CreateUser(
     private val passwordEncoderService: PasswordEncoderService,
 ) {
 
-    fun execute(user: User): Optional<User> {
+    operator fun invoke(user: User): Optional<User> {
         user.password = passwordEncoderService.encode(user.password)!!
 
         repository.saveUser(user)

@@ -9,7 +9,7 @@ class Login(
     private val repository: UserRepository,
 ) {
 
-    fun execute(username: String, password: String): String? {
+    operator fun invoke(username: String, password: String): String? {
         val user = repository.findByUsername(username).getOrNull() ?: return null
 
         return authService.generateKey(user, password)

@@ -11,12 +11,12 @@ class EditUser(
     private val passwordEncoderService: PasswordEncoderService
 ) {
 
-    fun execute(id: Long,user: User): Optional<User> {
+    operator fun invoke(id: Long,user: User): Optional<User> {
         user.id = id
         user.password = passwordEncoderService.encode(user.password)!!
 
         repository.saveUser(user)
 
-        return getUserById.execute(user.id!!)
+        return getUserById(user.id!!)
     }
 }

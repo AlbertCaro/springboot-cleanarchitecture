@@ -1,1 +1,1 @@
-INSERT INTO pruebabackend.users (id, email, last_name, name, password, username) VALUES (1, 'albertcaronava@gmail.com', 'Caro', 'Alberto', '$2a$10$.bCuK6EgezwYbKpmAnHPauGAQzYWbbhKMHgxrJtngwywVFe6zlzHa', 'alberto.caro');
+INSERT IGNORE INTO pruebabackend.users (id, email, last_name, name, password, username) VALUES (1, 'albertcaronava@gmail.com', 'Caro', 'Alberto', '$2a$10$.bCuK6EgezwYbKpmAnHPauGAQzYWbbhKMHgxrJtngwywVFe6zlzHa', 'alberto.caro');

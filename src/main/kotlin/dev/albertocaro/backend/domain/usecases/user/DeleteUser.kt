@@ -7,7 +7,7 @@ class DeleteUser(
     private val repository: UserRepository
 ) {
 
-    fun execute(user: User) {
+    operator fun invoke(user: User) {
         repository.delete(user)
     }
 }

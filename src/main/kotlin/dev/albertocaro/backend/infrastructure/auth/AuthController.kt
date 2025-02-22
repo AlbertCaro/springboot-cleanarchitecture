@@ -17,7 +17,7 @@ class AuthController {
 
     @PostMapping("/login")
     fun executeLogin(@RequestBody loginDto: LoginDto): ResponseEntity<Map<String, String>> {
-        val token = login.execute(loginDto.username, loginDto.password)
+        val token = login(loginDto.username, loginDto.password)
 
         if (token != null) {
             return ResponseEntity.ok(mapOf("token" to token))
