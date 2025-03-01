@@ -21,7 +21,7 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/auth/login", "/swagger-ui/**", "/v3/api-docs/**")
+                    .requestMatchers("/", "/auth/login", "/swagger-ui/**", "/v3/api-docs/**")
                     .permitAll() // Permitir login y Swagger
                     .anyRequest().authenticated() // Todas las demás rutas requieren autenticación
             }
@@ -32,7 +32,5 @@ class SecurityConfig {
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 }

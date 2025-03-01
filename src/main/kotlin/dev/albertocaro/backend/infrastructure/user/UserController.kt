@@ -2,12 +2,13 @@ package dev.albertocaro.backend.infrastructure.user
 
 import dev.albertocaro.backend.domain.models.toDomain
 import dev.albertocaro.backend.domain.usecases.user.*
-import dev.albertocaro.backend.infrastructure.user.dto.UserGetDto
-import dev.albertocaro.backend.infrastructure.user.dto.UserModificationDto
-import dev.albertocaro.backend.infrastructure.user.dto.toGet
-import jakarta.validation.ConstraintViolationException
+import dev.albertocaro.backend.infrastructure.user.dto.UserSerializationDto
+import dev.albertocaro.backend.infrastructure.user.dto.UserDeserializationDto
+import dev.albertocaro.backend.infrastructure.user.dto.toSerialization
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,56 +23,69 @@ import kotlin.jvm.optionals.getOrNull
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "Usuarios", description = "Módulo de gestión de usuarios del sistema")
+@SecurityRequirement(name = "bearerAuth")
 class UserController(
+    private val getUsers: GetUsers,
+    private val getUserById: GetUserById,
+    private val createUser: CreateUser,
+    private val editUser: EditUser,
+    private val deleteUser: DeleteUser,
 ) {
-    @Autowired
-    lateinit var getUsers: GetUsers
-
-    @Autowired
-    lateinit var getUserById: GetUserById
-
-    @Autowired
-    lateinit var createUser: CreateUser
-
-    @Autowired
-    lateinit var editUser: EditUser
-
-    @Autowired
-    lateinit var deleteUser: DeleteUser
 
     @GetMapping("/{id}")
-    fun getUser(@PathVariable id: Long): ResponseEntity<UserGetDto> {
-        val user = getUserById(id)
+    @Operation(
+        summary = "Consulta de usuario",
+        description = "Consulta la información de un sólo registro de usuario."
+    )
+    fun getUser(@PathVariable id: Long): ResponseEntity<UserSerializationDto> {
+        val user = getUserById(id) ?: return ResponseEntity.notFound().build()
 
-        return user.map { ResponseEntity.ok(it.toGet()) }.orElseGet { ResponseEntity.notFound().build() }
+        return ResponseEntity.ok(user.toSerialization())
     }
 
     @GetMapping
-    fun getAllUsers(): ResponseEntity<List<UserGetDto>> {
-        val users = getUsers().map { it.toGet() }
+    @Operation(
+        summary = "Consulta del listado de usuarios.",
+        description = "Consulta la información todos los usuarios registrados."
+    )
+    fun getAllUsers(): ResponseEntity<List<UserSerializationDto>> {
+        val users = getUsers().map { it.toSerialization() }
 
         return ResponseEntity.ok(users)
     }
 
     @PostMapping
-    fun createUser(@Valid @RequestBody user: UserModificationDto): ResponseEntity<Optional<UserGetDto>> {
-        val createdUser = createUser(user.toDomain()).map { it.toGet() }
+    @Operation(
+        summary = "Creación de usuarios",
+        description = "Almacena un nuevo usuario en la base de datos."
+    )
+    fun createUser(@Valid @RequestBody user: UserDeserializationDto): ResponseEntity<UserSerializationDto> {
+        val createdUser = createUser(user.toDomain())!!.toSerialization()
 
         return ResponseEntity.ok(createdUser)
     }
 
     @PutMapping("/{id}")
+    @Operation(
+        summary = "Edición de usuario",
+        description = "Modifica un usuario en la base de datos."
+    )
     fun updateUser(
-        @PathVariable id: Long, @Valid @RequestBody user: UserModificationDto
-    ): ResponseEntity<Optional<UserGetDto>> {
-        val editedUser = editUser(id, user.toDomain()).map { it.toGet() }
+        @PathVariable id: Long, @Valid @RequestBody user: UserDeserializationDto,
+    ): ResponseEntity<UserSerializationDto> {
+        val editedUser = editUser(id, user.toDomain())!!.toSerialization()
 
         return ResponseEntity.ok(editedUser)
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+        summary = "Eliminación de usuario",
+        description = "Remueve el registro de un usuario de la base de datos."
+    )
     fun removeUser(@PathVariable id: Long): ResponseEntity<Void> {
-        val user = getUserById(id).getOrNull() ?: return ResponseEntity.notFound().build()
+        val user = getUserById(id) ?: return ResponseEntity.notFound().build()
 
         deleteUser(user)
         return ResponseEntity.noContent().build()

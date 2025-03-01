@@ -5,18 +5,28 @@ import dev.albertocaro.backend.domain.models.User
 import dev.albertocaro.backend.domain.models.toDomain
 import dev.albertocaro.backend.data.database.repository.JpaUserRepository as JpaUserRepository
 import org.springframework.stereotype.Repository
-import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 @Repository
 class UserRepository(
-    private val jpaRepository: JpaUserRepository
+    private val jpaRepository: JpaUserRepository,
 ) {
-    fun findByUsername(username: String): Optional<User> {
-        return jpaRepository.findByUsername(username).map { it.toDomain() }
+    fun findByEmail(email: String): User? {
+        val user = jpaRepository.findByEmail(email)
+
+        return user?.toDomain()
     }
 
-    fun findById(id: Long): Optional<User> {
-        return jpaRepository.findById(id).map { it.toDomain() }
+    fun findByUsername(username: String): User? {
+        val user = jpaRepository.findByUsername(username)
+
+        return user?.toDomain()
+    }
+
+    fun findById(id: Long): User? {
+        val user = jpaRepository.findById(id).getOrNull()
+
+        return user?.toDomain()
     }
 
     fun findAll(): List<User> {

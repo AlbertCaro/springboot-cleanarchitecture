@@ -2,7 +2,7 @@ package dev.albertocaro.backend.infrastructure.user.dto
 
 import dev.albertocaro.backend.domain.models.User
 
-data class UserGetDto(
+data class UserSerializationDto(
     val id: Long? = null,
 
     val username: String,
@@ -14,4 +14,4 @@ data class UserGetDto(
     val lastName: String,
 )
 
-fun User.toGet() = UserGetDto(id, username, email, name, lastName)
+fun User.toSerialization() = UserSerializationDto(id, username, email, name, lastName)

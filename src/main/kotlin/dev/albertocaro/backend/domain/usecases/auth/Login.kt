@@ -2,7 +2,6 @@ package dev.albertocaro.backend.domain.usecases.auth
 
 import dev.albertocaro.backend.core.AuthService
 import dev.albertocaro.backend.data.UserRepository
-import kotlin.jvm.optionals.getOrNull
 
 class Login(
     private val authService: AuthService,
@@ -10,7 +9,7 @@ class Login(
 ) {
 
     operator fun invoke(username: String, password: String): String? {
-        val user = repository.findByUsername(username).getOrNull() ?: return null
+        val user = repository.findByUsername(username) ?: return null
 
         return authService.generateKey(user, password)
     }
