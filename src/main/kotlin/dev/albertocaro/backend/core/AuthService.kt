@@ -20,7 +20,7 @@ class AuthService(
         }
     }
 
-    private fun generateToken(username: String): String {
+    fun generateToken(username: String): String {
         return Jwts.builder()
             .subject(username)
             .issuedAt(Date())
