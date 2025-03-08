@@ -2,6 +2,8 @@ package dev.albertocaro.backend.core
 
 import dev.albertocaro.backend.domain.models.User
 import io.jsonwebtoken.Jwts
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.crypto.spec.SecretKeySpec
@@ -9,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec
 
 @Service
 class AuthService(
-    private val passwordEncoderService: PasswordEncoderService
+    private val passwordEncoderService: PasswordEncoderService,
 ) {
 
     fun generateKey(user: User, password: String): String? {
@@ -27,6 +29,16 @@ class AuthService(
             .expiration(Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hora de expiración
             .signWith(SecretKeySpec(SECRET_KEY.toByteArray(), "HmacSHA256"))
             .compact()
+    }
+
+    fun getAuthenticationUsername(): String? {
+        val authentication = SecurityContextHolder.getContext().authentication
+
+        if (authentication != null && authentication.principal is String) {
+            return authentication.principal as String
+        }
+
+        return null
     }
 
     companion object {

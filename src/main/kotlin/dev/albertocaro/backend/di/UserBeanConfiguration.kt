@@ -16,6 +16,9 @@ class UserBeanConfiguration {
     fun getUserByEmail(repository: UserRepository) = GetUserByEmail(repository)
 
     @Bean
+    fun getUserByUsername(repository: UserRepository) = GetUserByUsername(repository)
+
+    @Bean
     fun getUsers(repository: UserRepository) = GetUsers(repository)
 
     @Bean
