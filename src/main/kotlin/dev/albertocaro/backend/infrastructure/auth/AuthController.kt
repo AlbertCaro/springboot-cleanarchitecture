@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -38,8 +39,8 @@ class AuthController(
             )
         ]
     )
-    fun executeLogin(@RequestBody loginDto: LoginDto): ResponseEntity<out Any> {
-        val token = login(loginDto.username, loginDto.password)
+    fun executeLogin(@Valid @RequestBody loginDto: LoginDto): ResponseEntity<out Any> {
+        val token = login(loginDto.username!!, loginDto.password!!)
 
         if (token != null) {
             return ResponseEntity.ok(TokenDto(token))

@@ -1,7 +1,6 @@
-package dev.albertocaro.backend.infrastructure
+package dev.albertocaro.backend.infrastructure.user
 
-import dev.albertocaro.backend.JwtInterceptor
-import dev.albertocaro.backend.data.UserRepository
+import dev.albertocaro.backend.infrastructure.common.JwtInterceptor
 import dev.albertocaro.backend.infrastructure.user.dto.UserDeserializationDto
 import dev.albertocaro.backend.infrastructure.user.dto.UserSerializationDto
 import org.junit.jupiter.api.BeforeEach
@@ -13,20 +12,19 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.http.MediaType
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.exchange
 import org.springframework.web.client.getForEntity
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Sql(scripts = ["classpath:test/clean-db-after-test.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = ["classpath:clean-db-after-test.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class UserControllerTest @Autowired constructor(
     private val restTemplateBuilder: RestTemplateBuilder,
     private val jwtInterceptor: JwtInterceptor,
@@ -64,8 +62,7 @@ class UserControllerTest @Autowired constructor(
     fun `should can create a new user`() {
         val newUser = UserDeserializationDto("john.doe", "hola123", "test@gmail.com", "John", "Doe")
 
-        val response =
-            restTemplate.postForEntity(moduleUrl, newUser, UserSerializationDto::class.java)
+        val response = restTemplate.postForEntity(moduleUrl, newUser, UserSerializationDto::class.java)
 
         assertEquals(HttpStatus.OK, response.statusCode)
         assertNotNull(response.body)
@@ -81,17 +78,12 @@ class UserControllerTest @Autowired constructor(
 
     @Test
     fun `should can edit an existent user`() {
-        val userData =
-            UserDeserializationDto("juan.rmz", "picapapas", "juanramirez@gmail.com", "Juan", "Ramirez")
+        val userData = UserDeserializationDto("juan.rmz", "picapapas", "juanramirez@gmail.com", "Juan", "Ramirez")
 
-        val headers = HttpHeaders().apply {
-            contentType = MediaType.APPLICATION_JSON
-        }
-
-        val request = HttpEntity(userData, headers)
+        val request = HttpEntity(userData)
 
         val response =
-            restTemplate.exchange("$moduleUrl/2", HttpMethod.PUT, request, UserDeserializationDto::class.java)
+            restTemplate.exchange<UserSerializationDto>("$moduleUrl/2", HttpMethod.PUT, request)
 
         assertEquals(HttpStatus.OK, response.statusCode)
         assertNotNull(response.body)

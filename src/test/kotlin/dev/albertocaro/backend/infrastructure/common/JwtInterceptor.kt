@@ -1,8 +1,9 @@
-package dev.albertocaro.backend
+package dev.albertocaro.backend.infrastructure.common
 
 import dev.albertocaro.backend.core.AuthService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpRequest
+import org.springframework.http.MediaType
 import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.http.client.ClientHttpResponse
@@ -22,6 +23,7 @@ class JwtInterceptor(
 
         val headers = request.headers
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer $token")
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
         return execution.execute(request, body)
     }
 }
